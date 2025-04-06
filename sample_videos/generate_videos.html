@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Realistic Traffic Sample Video Generator</title>
+    <style>
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .video-section { margin-bottom: 40px; }
+        canvas { background: #f0f0f0; margin: 10px 0; }
+        button { padding: 10px 20px; margin: 10px 0; cursor: pointer; }
+        .controls { margin: 20px 0; }
+        .time { font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Realistic Traffic Sample Videos</h2>
+        <div id="videos"></div>
+    </div>
+
+    <script>
+        const trafficTypes = [
+            {
+                name: 'pedestrian',
+                color: '#333333',
+                count: 8,
+                speed: 1.5,
+                size: {width: 12, height: 30}
+            },
+            {
+                name: 'two_wheeler',
+                color: '#1a5f7a',
+                count: 5,
+                speed: 3,
+                size: {width: 20, height: 40}
+            },
+            {
+                name: 'car',
+                colors: ['#2c3e50', '#c0392b', '#2980b9', '#27ae60', '#8e44ad'],
+                count: 4,
+                speed: 2.5,
+                size: {width: 40, height: 70}
+            }
+        ];
+
+        function drawRoad(ctx, canvas) {
+            // Draw road background
+            ctx.fillStyle = '#555555';
+            ctx.fillRect(0, canvas.height/2 - 60, canvas.width, 120);
+
+            // Draw road markings
+            ctx.strokeStyle = '#ffffff';
+            ctx.setLineDash([20, 20]);
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw sidewalks
+            ctx.fillStyle = '#999999';
+            ctx.fillRect(0, canvas.height/2 - 80, canvas.width, 20);
+            ctx.fillRect(0, canvas.height/2 + 60, canvas.width, 20);
+
+            // Draw crosswalk
+            ctx.fillStyle = '#ffffff';
+            const crosswalkX = canvas.width / 2 - 30;
+            for(let i = 0; i < 6; i++) {
+                ctx.fillRect(crosswalkX + i * 10, canvas.height/2 - 60, 5, 120);
+            }
+        }
+
+        function drawPedestrian(ctx, x, y, direction) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (direction < 0) ctx.scale(-1, 1);
+
+            const time = Date.now() / 200;
+            const walkCycle = Math.sin(time);
+
+            // Body
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = 2;
+            
+            // Head
+            ctx.beginPath();
+            ctx.arc(0, -12, 6, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Body
+            ctx.beginPath();
+            ctx.moveTo(0, -6);
+            ctx.lineTo(0, 8);
+            ctx.stroke();
+
+            // Arms with walking motion
+            ctx.beginPath();
+            ctx.moveTo(0, -2);
+            ctx.lineTo(-8 * Math.cos(walkCycle), 4);
+            ctx.moveTo(0, -2);
+            ctx.lineTo(8 * Math.cos(walkCycle), 4);
+            ctx.stroke();
+
+            // Legs with walking motion
+            ctx.beginPath();
+            ctx.moveTo(0, 8);
+            ctx.lineTo(-5 * Math.cos(walkCycle), 15);
+            ctx.moveTo(0, 8);
+            ctx.lineTo(5 * Math.cos(walkCycle), 15);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawTwoWheeler(ctx, x, y, direction) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (direction < 0) ctx.scale(-1, 1);
+
+            const time = Date.now() / 150;
+            const bounce = Math.sin(time) * 2;
+
+            // Wheels with rotation
+            ctx.beginPath();
+            ctx.arc(-10, 5 + bounce, 8, 0, Math.PI * 2);
+            ctx.arc(10, 5 + bounce, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+
+            // Body
+            ctx.fillStyle = '#1a5f7a';
+            ctx.beginPath();
+            ctx.moveTo(-10, -15 + bounce);
+            ctx.lineTo(10, -15 + bounce);
+            ctx.lineTo(15, 0 + bounce);
+            ctx.lineTo(-15, 0 + bounce);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rider
+            ctx.beginPath();
+            ctx.arc(0, -25 + bounce, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawCar(ctx, x, y, direction, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (direction < 0) ctx.scale(-1, 1);
+
+            const time = Date.now() / 200;
+            const bounce = Math.sin(time) * 1.5;
+
+            // Car shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.beginPath();
+            ctx.ellipse(0, 40, 30, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Car body
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(-20, -35 + bounce);
+            ctx.lineTo(20, -35 + bounce);
+            ctx.lineTo(25, -15 + bounce);
+            ctx.lineTo(25, 15 + bounce);
+            ctx.lineTo(20, 35 + bounce);
+            ctx.lineTo(-20, 35 + bounce);
+            ctx.lineTo(-25, 15 + bounce);
+            ctx.lineTo(-25, -15 + bounce);
+            ctx.closePath();
+            ctx.fill();
+
+            // Windows
+            ctx.fillStyle = '#a8e6ff';
+            ctx.fillRect(-15, -25 + bounce, 30, 15);
+
+            // Wheels with rotation
+            const wheelRotation = time % (Math.PI * 2);
+            ctx.fillStyle = '#333';
+            [-15, 15].forEach(wheelX => {
+                [-20, 20].forEach(wheelY => {
+                    ctx.beginPath();
+                    ctx.arc(wheelX, wheelY + bounce, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Wheel detail
+                    ctx.save();
+                    ctx.translate(wheelX, wheelY + bounce);
+                    ctx.rotate(wheelRotation);
+                    ctx.strokeStyle = '#666';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(-6, 0);
+                    ctx.lineTo(6, 0);
+                    ctx.moveTo(0, -6);
+                    ctx.lineTo(0, 6);
+                    ctx.stroke();
+                    ctx.restore();
+                });
+            });
+
+            ctx.restore();
+        }
+
+        trafficTypes.forEach(type => {
+            const container = document.createElement('div');
+            container.className = 'video-section';
+            
+            const title = document.createElement('h3');
+            title.textContent = type.name.replace('_', ' ').toUpperCase();
+            container.appendChild(title);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 480;
+            container.appendChild(canvas);
+
+            const timeDisplay = document.createElement('div');
+            timeDisplay.className = 'time';
+            container.appendChild(timeDisplay);
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.textContent = `Download ${type.name} video`;
+            container.appendChild(downloadBtn);
+
+            document.getElementById('videos').appendChild(container);
+
+            const ctx = canvas.getContext('2d');
+            const objects = [];
+
+            // Initialize objects with lanes
+            for (let i = 0; i < type.count; i++) {
+                const lane = Math.floor(i % 2);
+                const direction = lane === 0 ? 1 : -1;
+                const y = canvas.height/2 + (lane === 0 ? -30 : 30);
+                objects.push({
+                    x: Math.random() * canvas.width,
+                    y: y,
+                    speed: type.speed * direction,
+                    direction: direction,
+                    color: type.colors ? type.colors[Math.floor(Math.random() * type.colors.length)] : type.color,
+                    waitingAtCrossing: false
+                });
+            }
+
+            function animate() {
+                // Clear canvas and draw environment
+                ctx.fillStyle = '#87CEEB'; // Sky blue background
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background elements
+                ctx.fillStyle = '#90EE90'; // Light green for grass
+                ctx.fillRect(0, 0, canvas.width, canvas.height/2 - 80);
+                ctx.fillRect(0, canvas.height/2 + 80, canvas.width, canvas.height/2);
+
+                // Add some background details
+                for(let i = 0; i < 20; i++) {
+                    ctx.fillStyle = '#2ecc71';
+                    ctx.beginPath();
+                    ctx.arc(
+                        (Math.sin(i) * 0.5 + 0.5) * canvas.width,
+                        (Math.cos(i) * 0.3 + 0.2) * canvas.height,
+                        10,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+
+                drawRoad(ctx, canvas);
+
+                // Update and draw objects
+                objects.forEach(obj => {
+                    // Check for crosswalk
+                    const crosswalkX = canvas.width / 2 - 30;
+                    if (type.name === 'pedestrian') {
+                        if (Math.abs(obj.x - crosswalkX) < 30) {
+                            obj.waitingAtCrossing = Math.random() > 0.995;
+                        }
+                        if (!obj.waitingAtCrossing) {
+                            obj.x += obj.speed;
+                        }
+                    } else {
+                        obj.x += obj.speed;
+                    }
+
+                    // Wrap around screen
+                    if (obj.x > canvas.width + 50) obj.x = -50;
+                    if (obj.x < -50) obj.x = canvas.width + 50;
+
+                    // Draw appropriate object
+                    if (type.name === 'pedestrian') {
+                        drawPedestrian(ctx, obj.x, obj.y, obj.direction);
+                    } else if (type.name === 'two_wheeler') {
+                        drawTwoWheeler(ctx, obj.x, obj.y, obj.direction);
+                    } else {
+                        drawCar(ctx, obj.x, obj.y, obj.direction, obj.color);
+                    }
+                });
+
+                // Add timestamp
+                const timestamp = new Date().toISOString();
+                timeDisplay.textContent = timestamp;
+                ctx.fillStyle = '#000';
+                ctx.font = '16px monospace';
+                ctx.fillText(timestamp, 10, 30);
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            downloadBtn.addEventListener('click', () => {
+                const chunks = [];
+                const stream = canvas.captureStream(30);
+                const mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'video/webm;codecs=vp9'
+                });
+
+                mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${type.name}_sample.webm`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+
+                // Record for 10 seconds
+                mediaRecorder.start();
+                setTimeout(() => mediaRecorder.stop(), 10000);
+            });
+        });
+    </script>
+</body>
+</html>

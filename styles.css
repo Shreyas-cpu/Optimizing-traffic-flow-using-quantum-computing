@@ -1,0 +1,389 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --light-color: #ecf0f1;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --danger-color: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f6fa;
+    color: var(--primary-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: var(--primary-color);
+    color: var(--light-color);
+    border-radius: 10px;
+}
+
+.instructions {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: left;
+}
+
+.instructions ol {
+    margin-left: 20px;
+    line-height: 1.8;
+}
+
+.instructions li {
+    margin-bottom: 8px;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+/* Video Upload Styles */
+.video-upload-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.upload-box {
+    text-align: center;
+}
+
+.video-preview {
+    width: 100%;
+    height: 150px;
+    border: 2px dashed var(--accent-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.video-preview:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.upload-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.video-input {
+    display: none;
+}
+
+/* Traffic Light Styles */
+.traffic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    place-items: center;
+}
+
+.traffic-light {
+    text-align: center;
+}
+
+.light-container {
+    background: var(--secondary-color);
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 60px;
+    margin: 10px auto;
+}
+
+.light {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.light.red {
+    background-color: #4a0000;
+}
+
+.light.yellow {
+    background-color: #4a4a00;
+}
+
+.light.green {
+    background-color: #004a00;
+}
+
+.light.active.red {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 20px var(--danger-color);
+}
+
+.light.active.yellow {
+    background-color: var(--warning-color);
+    box-shadow: 0 0 20px var(--warning-color);
+}
+
+.light.active.green {
+    background-color: var(--success-color);
+    box-shadow: 0 0 20px var(--success-color);
+}
+
+/* Node Information Styles */
+.node-info {
+    grid-column: span 2;
+}
+
+.coordinates-input {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    flex: 1;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.connected-nodes {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+/* Quantum Circuit Visualization */
+.quantum-circuit {
+    grid-column: span 2;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+.circuit-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.gate-legend {
+    margin-bottom: 15px;
+}
+
+.gate-legend ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gate-legend li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gate-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.gate-icon.reset { background-color: var(--danger-color); }
+.gate-icon.x-gate { background-color: var(--accent-color); }
+.gate-icon.u-gate { background-color: var(--success-color); }
+.gate-icon.c3x { background-color: var(--warning-color); }
+
+.circuit-description {
+    line-height: 1.6;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.circuit-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.qubit-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.qubit-line {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.qubit-label {
+    width: 50px;
+    text-align: right;
+    font-family: monospace;
+}
+
+.quantum-wire {
+    height: 2px;
+    background: var(--accent-color);
+    flex-grow: 1;
+    position: relative;
+}
+
+.gates-container {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+/* Control Panel Styles */
+.control-panel {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.control-btn.start {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.control-btn.stop {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.simulation-status {
+    text-align: center;
+}
+
+/* Quantum Gate Animation */
+@keyframes gateSlide {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.quantum-gate {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: var(--accent-color);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    animation: gateSlide 1s forwards;
+}
+
+.quantum-gate.control {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+}
+
+.quantum-gate.target {
+    border-radius: 50%;
+}
+
+.connection-line {
+    position: absolute;
+    width: 2px;
+    background: var(--accent-color);
+}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumPlators - Traffic Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quantum Traffic Management System</h1>
+            <p>Optimizing traffic flow using quantum computing</p>
+            <div class="instructions">
+                <h3>How It Works:</h3>
+                <ol>
+                    <li>Upload traffic videos for pedestrians, two-wheelers, and cars</li>
+                    <li>Enter the intersection node coordinates (X,Y)</li>
+                    <li>List connected intersection nodes</li>
+                    <li>Click "Start Simulation" to see the quantum circuit in action</li>
+                    <li>Watch how the quantum gates process traffic data to optimize signal timing</li>
+                </ol>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Video Input Section -->
+            <section class="video-inputs">
+                <h2>Traffic Detection Inputs</h2>
+                <div class="video-upload-grid">
+                    <div class="upload-box">
+                        <h3>Pedestrian Detection</h3>
+                        <div class="video-preview" id="pedestrian-preview">
+                            <div class="upload-icon">📹</div>
+                            <p>Upload Video</p>
+                        </div>
+                        <input type="file" id="pedestrian-input" accept="video/*" class="video-input">
+                    </div>
+                    <div class="upload-box">
+                        <h3>Two Wheeler Detection</h3>
+                        <div class="video-preview" id="two-wheeler-preview">
+                            <div class="upload-icon">📹</div>
+                            <p>Upload Video</p>
+                        </div>
+                        <input type="file" id="two-wheeler-input" accept="video/*" class="video-input">
+                    </div>
+                    <div class="upload-box">
+                        <h3>Car Detection</h3>
+                        <div class="video-preview" id="car-preview">
+                            <div class="upload-icon">📹</div>
+                            <p>Upload Video</p>
+                        </div>
+                        <input type="file" id="car-input" accept="video/*" class="video-input">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Traffic Light Grid -->
+            <section class="traffic-light-section">
+                <h2>Traffic Light Status</h2>
+                <div class="traffic-grid">
+                    <div class="traffic-light north">
+                        <h3>North</h3>
+                        <div class="light-container">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                    </div>
+                    <div class="traffic-light south">
+                        <h3>South</h3>
+                        <div class="light-container">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                    </div>
+                    <div class="traffic-light east">
+                        <h3>East</h3>
+                        <div class="light-container">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                    </div>
+                    <div class="traffic-light west">
+                        <h3>West</h3>
+                        <div class="light-container">
+                            <div class="light red"></div>
+                            <div class="light yellow"></div>
+                            <div class="light green"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Node Information -->
+            <section class="node-info">
+                <h2>Node Information</h2>
+                <div class="coordinates-input">
+                    <div class="input-group">
+                        <label for="x-coord">X Coordinate:</label>
+                        <input type="number" id="x-coord" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label for="y-coord">Y Coordinate:</label>
+                        <input type="number" id="y-coord" step="0.01">
+                    </div>
+                </div>
+                <div class="connected-nodes">
+                    <label for="nodes">Connected Nodes:</label>
+                    <textarea id="nodes" rows="4" placeholder="Enter node names (one per line)"></textarea>
+                </div>
+            </section>
+
+            <!-- Quantum Circuit Visualization -->
+            <section class="quantum-circuit">
+                <h2>Quantum Circuit Visualization</h2>
+                <div class="circuit-info">
+                    <div class="gate-legend">
+                        <h4>Quantum Gates Used:</h4>
+                        <ul>
+                            <li><span class="gate-icon reset">R</span> Reset - Initializes qubits</li>
+                            <li><span class="gate-icon x-gate">X</span> X Gate - Flips qubit state</li>
+                            <li><span class="gate-icon u-gate">U</span> U Gate - Rotation gate</li>
+                            <li><span class="gate-icon c3x">C3X</span> Toffoli - 3-control NOT gate</li>
+                        </ul>
+                    </div>
+                    <p class="circuit-description">
+                        This quantum circuit processes traffic data using 5 qubits. The circuit applies quantum gates
+                        to optimize traffic signal timing based on vehicle density and pedestrian count.
+                    </p>
+                </div>
+                <div class="circuit-container">
+                    <div class="qubit-lines">
+                        <div class="qubit-line">
+                            <span class="qubit-label">q[0]</span>
+                            <div class="quantum-wire"></div>
+                        </div>
+                        <div class="qubit-line">
+                            <span class="qubit-label">q[1]</span>
+                            <div class="quantum-wire"></div>
+                        </div>
+                        <div class="qubit-line">
+                            <span class="qubit-label">q[2]</span>
+                            <div class="quantum-wire"></div>
+                        </div>
+                        <div class="qubit-line">
+                            <span class="qubit-label">q[3]</span>
+                            <div class="quantum-wire"></div>
+                        </div>
+                        <div class="qubit-line">
+                            <span class="qubit-label">q[4]</span>
+                            <div class="quantum-wire"></div>
+                        </div>
+                    </div>
+                    <div class="gates-container" id="gates-animation">
+                        <!-- Gates will be added dynamically via JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <h2>Simulation Controls</h2>
+                <div class="controls">
+                    <button id="start-sim" class="control-btn start">Start Simulation</button>
+                    <button id="stop-sim" class="control-btn stop" disabled>Stop Simulation</button>
+                </div>
+                <div class="simulation-status">
+                    <h3>Status:</h3>
+                    <p id="status-text">Ready to start</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
